@@ -10,14 +10,30 @@ import java.util.Scanner;
 
 public class SinCifrado {
 	
-	String user;
-	String pass;
+	private String user;
+	private String pass;
 	Scanner sc = new Scanner (System.in);
 	File archivo;
 	FileReader fr;
 	BufferedReader br;
 	FileWriter fw;
 	BufferedWriter bw;
+	
+	public String getUser() {
+		return user;
+	}
+
+	public void setUser(String user) {
+		this.user = user;
+	}
+
+	public String getPass() {
+		return pass;
+	}
+
+	public void setPass(String pass) {
+		this.pass = pass;
+	}
 	
 	public SinCifrado(String user, String pass){
 		
@@ -26,8 +42,8 @@ public class SinCifrado {
 		
 	}
 	
+
 	public SinCifrado(){
-		
 		
 	}
 	
