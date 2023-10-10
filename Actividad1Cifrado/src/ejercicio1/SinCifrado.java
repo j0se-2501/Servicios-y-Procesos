@@ -61,8 +61,8 @@ public class SinCifrado {
 			archivo = new File("userList.txt");
 			fw = new FileWriter(archivo);
 			bw = new BufferedWriter (fw);
-			bw.write("User: "+user+", ");
-			bw.write("Pass: "+pass+";\n");
+			bw.write("User: "+user+", "); 
+			bw.write("Pass: "+pass+";\n"); //cada user y pass se guardan en una linea de texto, para luego poder leerla de golpe
 			bw.close();
 			
 		} catch (IOException e) {

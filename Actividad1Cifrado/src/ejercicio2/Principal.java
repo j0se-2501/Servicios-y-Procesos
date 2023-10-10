@@ -5,8 +5,8 @@ public class Principal {
 	public static void main(String[] args) {
 		
 		ConCifrado uno = new ConCifrado();
-		uno.cifrarDatos();
-		
+		uno.escribirDatosCifradosEnArchivo();
+		uno.comprobarCoincidenciaDatos();
 	}
 
 }

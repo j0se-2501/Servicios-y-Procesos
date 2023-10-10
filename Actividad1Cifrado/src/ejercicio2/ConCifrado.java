@@ -3,6 +3,7 @@ package ejercicio2;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -24,95 +25,113 @@ public class ConCifrado {
 	MessageDigest md;
 	byte[] digestUser;
 	byte[] digestPass;
-	StringBuffer hexString;
-	
+	StringBuffer hexStringUser;
+	StringBuffer hexStringPass;
 	
 	 public ConCifrado() {
 		 
 	 }
-   
-     public void pedirDatosParaCifrar() {
+     
+     public void cifrarDatos() { //meto los user y pass del usuario en dos string cifrados por MessageDigest
     	 
-      try {
-    	  
+    	 sinCifrado = new SinCifrado();
+         sinCifrado.pedirDatos(); //llamo a la clase sinCifrado ya que al final pido los datos igual
     	 
-   			
-      archivo = new File("userListCifrada.txt");
-      fw = new FileWriter(archivo);
-   	  bw = new BufferedWriter (fw);
-      sinCifrado = new SinCifrado();
-      
-      sinCifrado.pedirDatos();
-      cifrarDatos();
-      
-      
-      comprobarDatos();
-      
-      
-      } catch (IOException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
-      
+    	 try {
+        	 
+        	 md = MessageDigest.getInstance("SHA-256");
+        		
+             md.update(sinCifrado.getUser().getBytes());
+             
+             digestUser = md.digest();      
+            
+             hexStringUser = new StringBuffer();
+             
+             for (int i = 0;i<digestUser.length;i++) {
+                hexStringUser.append(Integer.toHexString(0xFF & digestUser[i])); //guardo el string cifrado del user y de la pass por separado
+                											//de esta forma después puedo controlarlos en el metodo de comprobar
+             }
+             
+         	md.update(sinCifrado.getPass().getBytes());
+           
+            digestPass = md.digest();      
+          
+            hexStringPass = new StringBuffer();
+           
+            for (int i = 0;i<digestPass.length;i++) {
+              hexStringPass.append(Integer.toHexString(0xFF & digestPass[i]));
+            }
+    	 
+    	 }  catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+    	 }
      }
      
-     public void cifrarDatos() {
+     public void escribirDatosCifradosEnArchivo() {
+    	 
+    	cifrarDatos(); 
+       
+    	try {
+    		
+        	archivo = new File("userListCifrada.txt");
+            fw = new FileWriter(archivo);
+         	 bw = new BufferedWriter (fw);
+        	bw.write("User: "+ hexStringUser.toString()+", ");
+            System.out.println("User: "+ hexStringUser.toString()+", ");
+        	bw.write("Pass: "+ hexStringPass.toString()+";\n");
+        	System.out.println("Pass: "+ hexStringPass.toString()+";\n");
+        	bw.close();
+   	    
+        } catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	 
+    	 
+     }
+     
+     public void comprobarCoincidenciaDatos() {
+    	
+    	 System.out.println("Comprobación de datos. Repita las credenciales:");
+    	 cifrarDatos();
     	 
     	 try {
     	 
-    	 md = MessageDigest.getInstance("SHA-256");
-    		
-
-         //Passing data to the created MessageDigest Object
-         md.update(sinCifrado.getUser().getBytes());
+         archivo = new File("userListCifrada.txt");
+		 fr = new FileReader(archivo);
+		 br = new BufferedReader(fr);
+		 String dato;
+			while ((dato = br.readLine()) != null) {
+				 
+					if (dato.equals("User: "+hexStringUser+", Pass: "+hexStringPass+";")) { 
+						System.out.println("Datos correctos"); 
+					} else
+						System.out.println("Datos incorrectos");
+			}
          
-         //Compute the message digest
-         digestUser = md.digest();      
-        
-         //Converting the byte array in to HexString format
-         StringBuffer hexString = new StringBuffer();
-         
-         for (int i = 0;i<digestUser.length;i++) {
-            hexString.append(Integer.toHexString(0xFF & digestUser[i]));
-         }
-         bw.write("User: "+ hexString.toString()+", ");
-         System.out.println("User: "+ hexString.toString()+", ");
-     	  
-     	  
-     	 md.update(sinCifrado.getPass().getBytes());
-       
-        //Compute the message digest
-        digestPass = md.digest();      
-      
-        //Converting the byte array in to HexString format
-        hexString = new StringBuffer();
-       
-        for (int i = 0;i<digestPass.length;i++) {
-          hexString.append(Integer.toHexString(0xFF & digestPass[i]));
-        }
-        bw.write("Pass: "+ hexString.toString()+";\n");
-   	    bw.close();
-   	 
-   	    System.out.println("Pass: "+ hexString.toString()+";\n");
-   	 
-   	    sinCifrado.pedirDatos();
-   	 
-    	 } catch (NoSuchAlgorithmException e) {
- 			// TODO Auto-generated catch block
- 			e.printStackTrace();
- 		} catch (IOException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
+ 		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			
+		} finally {
+			
+			try {
+				if (null != fr) {
+					fr.close();
+					fw.close();
+				}
+			} catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		}
     	 
      }
      
-     public void comprobarDatos() {
-    	 
-    	 System.out.println("Comprobacion de datos:");
-    	 sinCifrado.pedirDatos();
-    	 
-     }
+     
 
    
 }
