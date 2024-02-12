@@ -72,14 +72,19 @@ class GfG {
 	        }
 	    }
 	
-static List<List<Integer> > result
-		= new ArrayList<List<Integer> >();
-static boolean[] cols,leftDiagonal,rightDiagonal;
+	 
+	 
+	 //variables que pasarle a los métodos
+	 
+	 static List<List<Integer>> result
+			= new ArrayList<List<Integer>> ();
+	 static boolean[] cols,leftDiagonal,rightDiagonal;
 
 	// Driver code
 	public static void main(String[] args)
+	
 	{
-		int n = 4;
+		int n = 5;
 
 		List<List<Integer> > res = nQueen(n);
 		
