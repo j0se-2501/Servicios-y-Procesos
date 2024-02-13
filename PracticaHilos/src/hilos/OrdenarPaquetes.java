@@ -1,5 +1,4 @@
 package hilos;
-
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.concurrent.Semaphore;
@@ -32,6 +31,7 @@ public class OrdenarPaquetes implements Runnable {
 			System.out.println("Paquete añadido: "+nuevoPaquete+".");
 		}
 		System.out.println("//////////////////////\n//////////////////////\n//////////////////////\n\n\n");
+		semCola.release();
 	}
 	
 	
@@ -47,18 +47,23 @@ public class OrdenarPaquetes implements Runnable {
                 	try {
                 		
                 	
-                	paquete = this.colaPaquetes.remove();
-                	switch (paquete) {
-                		case(1): System.out.println("Paquete entrante: 1.");
+                	switch (this.colaPaquetes.peek()) {
+                		case(1): 
                 		semCola.acquire();
+						System.out.println("Paquete entrante: 1.");
+						paquete = this.colaPaquetes.remove();
                 		break;
                 		
-                		case(2): System.out.println("Paquete entrante: 2.");
+                		case(2): 
                 		semCola.acquire();
+						System.out.println("Paquete entrante: 2.");
+						paquete = this.colaPaquetes.remove();
                 		break;
                 		
-                		case(3): System.out.println("Paquete entrante: 3.");
+                		case(3): 
                 		semCola.acquire();
+						System.out.println("Paquete entrante: 3.");
+						paquete = this.colaPaquetes.remove();
                 		break;
                 		
                 		default: System.out.println("Como llegaste aqui?");
@@ -71,14 +76,17 @@ public class OrdenarPaquetes implements Runnable {
 						}
                 	}
                 
-					paquete=-1;
-					sem1.drainPermits();
-					sem2.drainPermits();
-					sem3.drainPermits();
 					
 				
-                
+                try {
+					semCola.acquire();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				paquete=-1;
                 System.out.println("\n\n\nTodos los paquetes fueron entregados.");
+				semCola.release();
 			}
                else if (Thread.currentThread().getName().equals("operario 1")) {
                 while (paquete>-1) {
@@ -167,5 +175,3 @@ public class OrdenarPaquetes implements Runnable {
 	
 
 }
-
-
