@@ -24,15 +24,19 @@ public class Testigo {
 	}
 	
 	public synchronized void soltarTestigo() {
-		System.out.println("Corredor " +this.corredor.id+ " suelta el relevo.");
-		this.contador++;
 		try {
 			corredor.hilo.sleep(2000);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		if (contador==5) finalCarrera=true;
+		System.out.println("Corredor " +this.corredor.id+ " suelta el relevo.");
+		this.contador++;
+		
+		if (contador==5) {
+			System.out.println("Final de la carrera");
+			finalCarrera=true;
+		}
 		else notify();
 	}
 
