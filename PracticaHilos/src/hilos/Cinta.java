@@ -27,7 +27,7 @@ public class Cinta extends Thread {
         while (this.quedanPaquetes) {
             try {
                 // Espera a que el semáforo permita el acceso
-                semCinta.acquire();
+            	semCinta.acquire(semCinta.availablePermits());
                 llenarCinta();
                 // Libera el semáforo después de llenar la cinta
                 Thread.sleep(2000); // Simula el tiempo que tarda en reponer los paquetes

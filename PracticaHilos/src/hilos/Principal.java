@@ -7,9 +7,9 @@ public class Principal {
     public static void main(String[] args) {
 
         Semaphore semCinta = new Semaphore(1); // Semáforo para controlar el acceso a la cinta
-        Semaphore semOperario1 = new Semaphore(1); // Semáforo para controlar el acceso del operario 1 a la cinta
-        Semaphore semOperario2 = new Semaphore(1); // Semáforo para controlar el acceso del operario 2 a la cinta
-        Semaphore semOperario3 = new Semaphore(1); // Semáforo para controlar el acceso del operario 3 a la cinta
+        Semaphore semOperario1 = new Semaphore(0); // Semáforo para controlar el acceso del operario 1 a la cinta
+        Semaphore semOperario2 = new Semaphore(0); // Semáforo para controlar el acceso del operario 2 a la cinta
+        Semaphore semOperario3 = new Semaphore(0); // Semáforo para controlar el acceso del operario 3 a la cinta
 
         Cinta cinta = new Cinta(5, semCinta, semOperario1, semOperario2, semOperario3);
         Operario operario1 = new Operario(1, cinta, semOperario1, semCinta);
